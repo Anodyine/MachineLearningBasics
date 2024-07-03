@@ -34,7 +34,7 @@ B = np.array(
 print('A dot B')
 print(A.dot(B))
 
-# print(B.dot(A)) is impossible because A[2][0] is undefined!
+# print(B.dot(A)) is impossible because A[2][0] is undefined! Dimensions don't match.
 
 print('np.linalg.det(A) =')
 print(np.linalg.det(A))

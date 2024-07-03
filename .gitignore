@@ -15,3 +15,7 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+
+#artifacts
+.jpg
+.png
