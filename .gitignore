@@ -17,5 +17,5 @@ var/
 *.egg
 
 #artifacts
-.jpg
-.png
+*.jpg
+*.png
