@@ -47,3 +47,11 @@ print(df.values)
 A = df[['open', 'close']].values
 print(type(A))
 print(A)
+
+smalldf = df[['open', 'close']]
+smalldf.to_csv('output.csv', index=False)
+
+def date_to_year(row):
+    return int(row['date'].split('-')[0])
+
+print(df.apply(date_to_year, axis=1))
