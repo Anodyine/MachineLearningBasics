@@ -19,3 +19,4 @@ var/
 #artifacts
 *.jpg
 *.png
+*.csv
