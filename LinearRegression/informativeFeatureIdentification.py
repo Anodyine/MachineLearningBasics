@@ -1,9 +1,11 @@
+
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn import datasets
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 from LinearRegression import LinearRegression
-
+mpl.use( 'tkagg' )
 def meanSquaredError(y_test, predictions):
     return np.mean((predictions - y_test)**2)
 
