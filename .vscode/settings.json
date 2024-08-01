@@ -1,5 +1,5 @@
 {
     "code-runner.executorMap": {
-        "python": "$workspaceRoot/.venv/bin/python -u $fullFileName",
+        "python": "$pythonPath -u $fullFileName",
     }
 }
