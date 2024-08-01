@@ -16,8 +16,8 @@ To get started easily with Ubuntu and Visual Studio Code follow the following st
 - Code Runner
 
 ### Setup Python Environment
-4. Open a .py file
-5. Click on the python version numver in the bottom right corner of VS code
+4. Open /LinearRegression/informativeFeatureIdentification.py
+5. Click on the python version number in the bottom right corner of VS code
 6. Click Create Virtual Environment
 7. Click Venv
 8. Check requirements.txt
@@ -30,7 +30,7 @@ To get started easily with Ubuntu and Visual Studio Code follow the following st
 
 ### Run code to test
 
-11. Open informativeFeatureIdentification.py and click on the play button in the top right corner
+11. Open /LinearRegression/informativeFeatureIdentification.py and click on the play button in the top right corner
 12. Observe the graph that tests linear regression
 
 ## Windows
