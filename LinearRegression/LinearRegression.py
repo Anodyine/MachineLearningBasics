@@ -1,7 +1,8 @@
 import numpy as np
 
+
 class LinearRegression:
-    def __init__(self, learningRate = 0.001, numIterations=1000):
+    def __init__(self, learningRate=0.001, numIterations=1000):
         self.learningRate = learningRate
         self.numIterations = numIterations
         self.weights = None
@@ -14,9 +15,9 @@ class LinearRegression:
         
         for i in range(numFeatures):
             for _ in range(self.numIterations):
-                yPredicted = np.dot(X[:,i], self.weights[i]) + self.bias[i]
+                yPredicted = np.dot(X[:, i], self.weights[i]) + self.bias[i]
                 
-                dw = 1/numSamples*np.dot(X[:,i].T, (yPredicted - y))
+                dw = 1/numSamples*np.dot(X[:, i].T, (yPredicted - y))
                 db = 1/numSamples*np.sum(yPredicted - y)
                 
                 self.weights[i] = self.weights[i] - self.learningRate * dw
@@ -26,7 +27,7 @@ class LinearRegression:
         numSamples, numFeatures = X.shape
         y = np.zeros(X.shape)
         for i in range(numFeatures):
-            y[:,i] = np.dot(X[:,i], self.weights[i]) + self.bias[i]
+            y[:, i] = np.dot(X[:, i], self.weights[i]) + self.bias[i]
             
         return y
     
