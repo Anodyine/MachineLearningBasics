@@ -1,15 +1,21 @@
 import numpy as np
-from dataclasses import dataclass
 from typing import Optional
 import math
 
 
-@dataclass
 class DecisionTreeNode:
-    featureIndex: int = -1
-    yLabel: int = -1
-    left: Optional['DecisionTreeNode'] = None
-    right: Optional['DecisionTreeNode'] = None
+    def __init__(self, featureIndex=None, left=None, right=None, *, value=None):
+        self.featureIndex = featureIndex
+        self.left = left
+        self.right = right
+        self.value = value
+        
+    def is_leaf_node(self):
+        return self.value is not None
+    # featureIndex: int = -1
+    # yLabel: int = -1
+    # left: Optional['DecisionTreeNode'] = None
+    # right: Optional['DecisionTreeNode'] = None
 
 
 class DecisionTree:
@@ -21,13 +27,13 @@ class DecisionTree:
         
     def predict(self, X):
         current_node = self.root
-        while current_node.featureIndex != -1:
+        while current_node.is_leaf_node() == False:
             if (X[current_node.featureIndex] == 1):
                 current_node = current_node.left
             else:
                 current_node = current_node.right
         
-        return current_node.yLabel
+        return current_node.value
             
         
     def _findOptimalChildBranches(self, node: DecisionTreeNode, X, y, featuresUsed):
@@ -35,10 +41,14 @@ class DecisionTree:
         
         if featuresUsed[featuresUsed == False].size < 2:
             node.featureIndex = int(tuple(np.argwhere(featuresUsed == False)[0])[0])
+            leftYValues = y[X[:,node.featureIndex] == 1]
+            rightYValues = y[X[:,node.featureIndex] == 0]
             node.left = DecisionTreeNode()
-            node.left.yLabel = 1
             node.right = DecisionTreeNode()
-            node.right.yLabel = 0
+            if (leftYValues.size > 0):
+                node.left.value = round(np.mean(leftYValues))
+            if (rightYValues.size > 0):
+                node.right.value = round(np.mean(rightYValues))
             return
         
         lowestEntropyIndex = int(tuple(np.argwhere(featuresUsed == False)[0])[0])
@@ -73,7 +83,8 @@ class DecisionTree:
                     y[X[:,lowestEntropyIndex] == 1],
                     np.copy(featuresUsed))
             else:
-                node.left.yLabel = 1
+                print(y[X[:,lowestEntropyIndex] == 1])
+                node.left.value = 1
             if (rightBranchEntropy > 0):
                 self._findOptimalChildBranches(
                     node.right, 
@@ -81,11 +92,24 @@ class DecisionTree:
                     y[X[:,lowestEntropyIndex] == 0],
                     np.copy(featuresUsed))
             else:
-                node.right.yLabel = 0
+                print(y[X[:,lowestEntropyIndex] == 0])
+                node.right.value = 0
+        else:
+            leftYValues = y[X[:,node.featureIndex] == 1]
+            rightYValues = y[X[:,node.featureIndex] == 0]
+            node.left = DecisionTreeNode()
+            node.right = DecisionTreeNode()
+            if (leftYValues.size > 0):
+                node.left.value = round(np.mean(leftYValues))
+            if (rightYValues.size > 0):
+                node.right.value = round(np.mean(rightYValues)) 
         
         return 
     
     def _calculateEntropy(self, y):
+        if y.size <= 0:
+            return 0
+        
         numOnes = np.count_nonzero(y)
         numZeros = y.size - numOnes 
         p1 = numOnes/(y.size)

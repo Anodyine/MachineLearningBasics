@@ -4,7 +4,7 @@ from DecisionTree import DecisionTree
 import pandas as pd 
 
 df = pd.read_csv("decisionTreeTest.data")
-X = df.values[:,0:4]
+X = df.values[:,0:5]
 y = df.values[:,5]
 # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 print(X)
