@@ -3,6 +3,7 @@ from sklearn.model_selection import train_test_split
 from DecisionTree import DecisionTree
 import pandas as pd
 from PrettyPrint import PrettyPrintTree
+from ModelEvaluation.DiscreteEvaluationHelpers import calculateSensitivity, calculateSpecitivity
 
 df = pd.read_csv("decisionTreeTest.data")
 X = df.values[:,0:5] # select columns
@@ -35,12 +36,33 @@ print("The following decision tree was generated (true statements will cause pre
 pt = PrettyPrintTree(getChildren, getLabel)
 pt(model.root)
 
-print("Overfitting is confirmed by comparing performance on training data vs performance on testing data:")
-print("Trained Results:")
+y_train_pred = []
 for i in range(X_train.shape[0]):
-    print(model.predict(X_train[i,:]) == y_train[i])
+    y_train_pred.append(model.predict(X_train[i,:]))
     
-print("Test Results:")
+print("Overfitting is confirmed by comparing performance on training data vs performance on testing data:")
+# print("Trained Results:")
+# print("y_train_pred:")
+# print(y_train_pred)
+# print("y_train:")
+# print(y_train)
+    
+y_test_pred = []
 for i in range(X_test.shape[0]):
-    print(model.predict(X_test[i,:]) == y_test[i])
+    y_test_pred.append(model.predict(X_test[i,:]))
+    
+# print("Test Results:")
+# print("y_test_pred:")
+# print(y_test_pred)
+# print("y_test:")
+# print(y_test)
 
+trainedSensitivity = calculateSensitivity(y_train, y_train_pred)
+print("Trained sensitivity: ", trainedSensitivity)
+trainedSpecitivity = calculateSpecitivity(y_train, y_train_pred)
+print("Trained specitivity: ", trainedSpecitivity)
+
+testSensitivity = calculateSensitivity(y_test, y_test_pred)
+print("Test sensitivity: ", testSensitivity)
+testSpecitivity = calculateSpecitivity(y_test, y_test_pred)
+print("Test specitivity: ", testSpecitivity)
