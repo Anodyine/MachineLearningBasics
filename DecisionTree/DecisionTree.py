@@ -41,32 +41,25 @@ class DecisionTree:
         
         if featuresUsed[featuresUsed == False].size < 2:
             node.featureIndex = int(tuple(np.argwhere(featuresUsed == False)[0])[0])
-            leftYValues = y[X[:,node.featureIndex] == 1]
-            rightYValues = y[X[:,node.featureIndex] == 0]
-            node.left = DecisionTreeNode()
-            node.right = DecisionTreeNode()
-            if (leftYValues.size > 0):
-                node.left.value = round(np.mean(leftYValues))
-            if (rightYValues.size > 0):
-                node.right.value = round(np.mean(rightYValues))
+            self._createEndingBranch(node, X, y)
             return
         
         lowestEntropyIndex = int(tuple(np.argwhere(featuresUsed == False)[0])[0])
         lowestEntropy = 1
-        leftBranchEntropy = 1
-        rightBranchEntropy = 1
+        lowestLeftBranchEntropy = 1
+        lowestRightBranchEntropy = 1
         for i in range(numFeatures):
             if (featuresUsed[i] == False):
-                branch1YValues = y[X[:,i] == 1]
-                branch2YValues = y[X[:,i] == 0]
-                branch1Entropy = self._calculateEntropy(branch1YValues)
-                branch2Entropy = self._calculateEntropy(branch2YValues)
-                totalBranchEntropy = branch1Entropy*branch1YValues.size/numSamples + branch2Entropy*branch2YValues.size/numSamples
+                leftBranchYValues = y[X[:,i] == 1]
+                rightBranchYValues = y[X[:,i] == 0]
+                leftBranchEntropy = self._calculateEntropy(leftBranchYValues)
+                rightBranchEntropy = self._calculateEntropy(rightBranchYValues)
+                totalBranchEntropy = leftBranchEntropy*leftBranchYValues.size/numSamples + rightBranchEntropy*rightBranchYValues.size/numSamples
                 if (totalBranchEntropy < lowestEntropy):
                     lowestEntropy = totalBranchEntropy
                     lowestEntropyIndex = i
-                    leftBranchEntropy = branch1Entropy
-                    rightBranchEntropy = branch2Entropy
+                    lowestLeftBranchEntropy = leftBranchEntropy
+                    lowestRightBranchEntropy = rightBranchEntropy
         
         node.featureIndex = lowestEntropyIndex
         featuresUsed[lowestEntropyIndex] = True
@@ -74,37 +67,38 @@ class DecisionTree:
         if (lowestEntropy != 0):
             node.left = DecisionTreeNode()
             node.right = DecisionTreeNode()
-            newX1 = X[X[:,lowestEntropyIndex] == 1, :]
-            newX2 = X[X[:,lowestEntropyIndex] == 0, :]
-            if (leftBranchEntropy > 0):
+            if (lowestLeftBranchEntropy > 0):
                 self._findOptimalChildBranches(
                     node.left, 
-                    newX1,
+                    X[X[:,lowestEntropyIndex] == 1, :],
                     y[X[:,lowestEntropyIndex] == 1],
                     np.copy(featuresUsed))
             else:
-                print(y[X[:,lowestEntropyIndex] == 1])
-                node.left.value = 1
-            if (rightBranchEntropy > 0):
+                node.left.value = y[X[:,lowestEntropyIndex] == 1][0]
+            if (lowestRightBranchEntropy > 0):
                 self._findOptimalChildBranches(
                     node.right, 
-                    newX2,
+                    X[X[:,lowestEntropyIndex] == 0, :],
                     y[X[:,lowestEntropyIndex] == 0],
                     np.copy(featuresUsed))
             else:
-                print(y[X[:,lowestEntropyIndex] == 0])
-                node.right.value = 0
+                node.right.value = y[X[:,lowestEntropyIndex] == 0][0]
         else:
-            leftYValues = y[X[:,node.featureIndex] == 1]
-            rightYValues = y[X[:,node.featureIndex] == 0]
-            node.left = DecisionTreeNode()
-            node.right = DecisionTreeNode()
-            if (leftYValues.size > 0):
-                node.left.value = round(np.mean(leftYValues))
-            if (rightYValues.size > 0):
-                node.right.value = round(np.mean(rightYValues)) 
+            self._createEndingBranch(node, X, y)
         
         return 
+    
+    def _createEndingBranch (self, node, X, y):
+        leftYValues = y[X[:,node.featureIndex] == 1]
+        rightYValues = y[X[:,node.featureIndex] == 0]
+        node.left = DecisionTreeNode()
+        node.right = DecisionTreeNode()
+        if (leftYValues.size > 0):
+            node.left.value = round(np.mean(leftYValues))
+        if (rightYValues.size > 0):
+            node.right.value = round(np.mean(rightYValues)) 
+        return
+        
     
     def _calculateEntropy(self, y):
         if y.size <= 0:
