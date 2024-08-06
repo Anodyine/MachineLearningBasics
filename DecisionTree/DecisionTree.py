@@ -8,12 +8,16 @@ class DecisionTreeNode:
         self.left = left
         self.right = right
         self.value = value
+        self.depth = 0
         
     def is_leaf_node(self):
         return self.value is not None
 
 
 class DecisionTree:
+    def __init__(self, max_depth=10):
+        self.max_depth = max_depth
+    
     def fit(self, X, y):
         numFeatures = X.shape[1]
         featuresUsed = np.zeros(numFeatures, bool)
@@ -59,9 +63,11 @@ class DecisionTree:
         node.featureIndex = lowestEntropyIndex
         featuresUsed[lowestEntropyIndex] = True
         
-        if (lowestEntropy != 0):
+        if (lowestEntropy != 0 and node.depth + 1 < self.max_depth):
             node.left = DecisionTreeNode()
             node.right = DecisionTreeNode()
+            node.left.depth = node.depth + 1
+            node.right.depth = node.depth + 1
             if (lowestLeftBranchEntropy > 0):
                 self._findOptimalChildBranches(
                     node.left, 
@@ -88,6 +94,8 @@ class DecisionTree:
         rightYValues = y[X[:,node.featureIndex] == 0]
         node.left = DecisionTreeNode()
         node.right = DecisionTreeNode()
+        node.left.depth = node.depth + 1
+        node.right.depth = node.depth + 1
         if (leftYValues.size > 0):
             node.left.value = round(np.mean(leftYValues))
         if (rightYValues.size > 0):

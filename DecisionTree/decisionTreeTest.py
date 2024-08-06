@@ -8,8 +8,10 @@ from ModelEvaluation.DiscreteEvaluationHelpers import calculateSensitivity, calc
 df = pd.read_csv("decisionTreeTest.data")
 X = df.values[:,0:5] # select columns
 y = df.values[:,5] # select column
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4)
-model = DecisionTree()
+# X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+X_train = X
+y_train = y
+model = DecisionTree(max_depth=3)
 model.fit(X_train, y_train)
 
 
@@ -40,16 +42,15 @@ y_train_pred = []
 for i in range(X_train.shape[0]):
     y_train_pred.append(model.predict(X_train[i,:]))
     
-print("Overfitting is confirmed by comparing performance on training data vs performance on testing data:")
 # print("Trained Results:")
 # print("y_train_pred:")
 # print(y_train_pred)
 # print("y_train:")
 # print(y_train)
     
-y_test_pred = []
-for i in range(X_test.shape[0]):
-    y_test_pred.append(model.predict(X_test[i,:]))
+# y_test_pred = []
+# for i in range(X_test.shape[0]):
+#     y_test_pred.append(model.predict(X_test[i,:]))
     
 # print("Test Results:")
 # print("y_test_pred:")
@@ -57,12 +58,13 @@ for i in range(X_test.shape[0]):
 # print("y_test:")
 # print(y_test)
 
+# print("Overfitting is confirmed by comparing performance on training data vs performance on testing data:")
 trainedSensitivity = calculateSensitivity(y_train, y_train_pred)
-print("Trained sensitivity: ", trainedSensitivity)
+print("Sensitivity with trained data: ", trainedSensitivity)
 trainedSpecitivity = calculateSpecitivity(y_train, y_train_pred)
-print("Trained specitivity: ", trainedSpecitivity)
+print("Specitivity with trained data: ", trainedSpecitivity)
 
-testSensitivity = calculateSensitivity(y_test, y_test_pred)
-print("Test sensitivity: ", testSensitivity)
-testSpecitivity = calculateSpecitivity(y_test, y_test_pred)
-print("Test specitivity: ", testSpecitivity)
+# testSensitivity = calculateSensitivity(y_test, y_test_pred)
+# print("Test sensitivity: ", testSensitivity)
+# testSpecitivity = calculateSpecitivity(y_test, y_test_pred)
+# print("Test specitivity: ", testSpecitivity)
