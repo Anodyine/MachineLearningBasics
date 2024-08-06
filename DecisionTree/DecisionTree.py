@@ -1,5 +1,4 @@
 import numpy as np
-from typing import Optional
 import math
 
 
@@ -12,15 +11,11 @@ class DecisionTreeNode:
         
     def is_leaf_node(self):
         return self.value is not None
-    # featureIndex: int = -1
-    # yLabel: int = -1
-    # left: Optional['DecisionTreeNode'] = None
-    # right: Optional['DecisionTreeNode'] = None
 
 
 class DecisionTree:
     def fit(self, X, y):
-        numSamples, numFeatures = X.shape
+        numFeatures = X.shape[1]
         featuresUsed = np.zeros(numFeatures, bool)
         self.root = DecisionTreeNode()
         self._findOptimalChildBranches(self.root, X, y, featuresUsed)
