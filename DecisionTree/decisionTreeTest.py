@@ -31,7 +31,7 @@ def getLabel(node):
         if node.value == 1:
             return "Got A"
     else:
-        return df.columns[node.featureIndex] + " == 1"
+        return df.columns[node.featureIndex]
 
 
 print("The following decision tree was generated (true statements will cause prediction to take the left branch):")
@@ -42,22 +42,10 @@ y_train_pred = []
 for i in range(X_train.shape[0]):
     y_train_pred.append(model.predict(X_train[i,:]))
     
-# print("Trained Results:")
-# print("y_train_pred:")
-# print(y_train_pred)
-# print("y_train:")
-# print(y_train)
-    
 # y_test_pred = []
 # for i in range(X_test.shape[0]):
 #     y_test_pred.append(model.predict(X_test[i,:]))
     
-# print("Test Results:")
-# print("y_test_pred:")
-# print(y_test_pred)
-# print("y_test:")
-# print(y_test)
-
 # print("Overfitting is confirmed by comparing performance on training data vs performance on testing data:")
 trainedSensitivity = calculateSensitivity(y_train, y_train_pred)
 print("Sensitivity with trained data: ", trainedSensitivity)

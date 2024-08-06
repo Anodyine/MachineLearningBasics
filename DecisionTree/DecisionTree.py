@@ -1,6 +1,9 @@
 import numpy as np
 import math
 
+def round_school(x):
+    i, f = divmod(x, 1)
+    return int(i + ((f >= 0.5) if (x > 0) else (f > 0.5)))
 
 class DecisionTreeNode:
     def __init__(self, featureIndex=None, left=None, right=None, *, value=None):
@@ -97,9 +100,21 @@ class DecisionTree:
         node.left.depth = node.depth + 1
         node.right.depth = node.depth + 1
         if (leftYValues.size > 0):
-            node.left.value = round(np.mean(leftYValues))
+            leftYMean = np.mean(leftYValues) 
+            node.left.value = round_school(leftYMean)
         if (rightYValues.size > 0):
-            node.right.value = round(np.mean(rightYValues)) 
+            rightYMean = np.mean(rightYValues) 
+            node.right.value = round_school(rightYMean) 
+            
+        if (leftYValues.size > 0 and rightYValues.size > 0):
+            if (rightYMean == 0.5):
+                node.right.value = 0 if round_school(leftYMean) == 1 else 1 
+            if (leftYMean == 0.5):
+                node.left.value = 0 if round_school(rightYMean) == 1 else 1 
+            if (leftYMean == 0.5 and rightYMean == 0.5):
+                node.left.value = 1 
+                node.right.value = 0 
+            
         return
         
     
