@@ -1,7 +1,6 @@
-import numpy as np
 from sklearn.model_selection import train_test_split
-from DecisionTree import DecisionTree
 import pandas as pd
+from DecisionTree.DecisionTree import DecisionTree
 from PrettyPrint import PrettyPrintTree
 from ModelEvaluation.DiscreteEvaluationHelpers import calculateSensitivity, calculateSpecitivity
 
